@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#090d18">
+  <meta name="description" content="GAMEVERSE AI: tu centro de inteligencia artificial para videojuegos, programación y creatividad.">
+  <title>GAMEVERSE AI</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar" id="sidebar">
+      <div class="brand">
+        <div class="brand-mark"><span>G</span><i></i></div>
+        <div><strong>GAMEVERSE<span> AI</span></strong><small>CREATIVE INTELLIGENCE</small></div>
+      </div>
+      <button class="new-chat" id="newChatBtn"><span>＋</span> Nuevo chat <kbd>Ctrl K</kbd></button>
+      <div class="side-label">ESPACIO DE TRABAJO</div>
+      <nav class="main-nav">
+        <button class="nav-item active" data-view="chat"><span class="nav-icon">◈</span> Chat principal</button>
+        <button class="nav-item" data-view="projects"><span class="nav-icon">▦</span> Mis proyectos <em>Pronto</em></button>
+        <button class="nav-item" data-view="library"><span class="nav-icon">▤</span> Biblioteca <em>Pronto</em></button>
+      </nav>
+      <div class="side-label mode-label">MODOS DE IA</div>
+      <div class="mode-list" id="modeList">
+        <button class="mode-item selected" data-mode="general"><span class="mode-symbol purple">✳</span><span><b>General</b><small>Todo tipo de consultas</small></span></button>
+        <button class="mode-item" data-mode="game"><span class="mode-symbol blue">▣</span><span><b>Game Creator</b><small>Diseño de videojuegos</small></span></button>
+        <button class="mode-item" data-mode="roblox"><span class="mode-symbol green">◇</span><span><b>Roblox Studio</b><small>Luau y experiencias</small></span></button>
+        <button class="mode-item" data-mode="coding"><span class="mode-symbol cyan">&lt;/&gt;</span><span><b>Programación</b><small>Código y depuración</small></span></button>
+        <button class="mode-item" data-mode="design"><span class="mode-symbol pink">✧</span><span><b>Game Design</b><small>Arte e interfaces</small></span></button>
+        <button class="mode-item" data-mode="study"><span class="mode-symbol yellow">⌘</span><span><b>Estudio</b><small>Aprender paso a paso</small></span></button>
+        <button class="mode-item" data-mode="writing"><span class="mode-symbol orange">✎</span><span><b>Escritura</b><small>Textos e ideas</small></span></button>
+      </div>
+      <div class="history-heading"><span class="side-label">RECIENTES</span><button id="clearHistory" title="Borrar historial">•••</button></div>
+      <div class="history-list" id="historyList"></div>
+      <div class="sidebar-bottom">
+        <div class="user-avatar">F</div>
+        <div class="user-info"><b>Usuario</b><small>Plan de prueba</small></div>
+        <button class="settings-btn" id="settingsBtn" title="Estado de conexión">⚙</button>
+      </div>
+    </aside>
+    <main class="main-area">
+      <header class="topbar">
+        <button class="mobile-menu" id="mobileMenu" aria-label="Abrir menú">☰</button>
+        <div class="breadcrumb">Workspace <span>/</span> <b id="topMode">Chat principal</b></div>
+        <div class="top-actions">
+          <div class="connection"><i id="statusDot"></i><span id="statusText">Comprobando IA...</span></div>
+          <button class="icon-button" id="themeBtn" title="Cambiar apariencia">◐</button>
+        </div>
+      </header>
+      <section class="chat-scroll" id="chatScroll">
+        <div class="welcome" id="welcome">
+          <div class="welcome-orb"><div class="orb-core">✳</div><span class="orb-ring ring-one"></span><span class="orb-ring ring-two"></span><span class="orb-dot"></span></div>
+          <div class="eyebrow"><span></span> INTELIGENCIA CREATIVA, SIN LÍMITES</div>
+          <h1>¿Qué vamos a<br><span>crear hoy?</span></h1>
+          <p>Tu espacio para imaginar, desarrollar y llevar tus ideas al siguiente nivel. Especialmente diseñado para creadores de videojuegos.</p>
+          <div class="suggestion-grid">
+            <button class="suggestion-card" data-prompt="Ayudame a crear un videojuego original desde cero."><span class="suggestion-icon purple-bg">✧</span><b>Crear un videojuego</b><small>De la idea al prototipo</small><span class="arrow">↗</span></button>
+            <button class="suggestion-card" data-prompt="Quiero aprender a programar un sistema de juego. ¿Por dónde empezamos?"><span class="suggestion-icon blue-bg">&lt;/&gt;</span><b>Programar un sistema</b><small>Código explicado paso a paso</small><span class="arrow">↗</span></button>
+            <button class="suggestion-card" data-prompt="Diseñá el concepto de un personaje original para mi videojuego."><span class="suggestion-icon pink-bg">◇</span><b>Diseñar personajes</b><small>Identidad y estilo visual</small><span class="arrow">↗</span></button>
+            <button class="suggestion-card" data-prompt="Dame ideas de mecánicas divertidas para un juego multijugador."><span class="suggestion-icon green-bg">▣</span><b>Inventar mecánicas</b><small>Ideas para jugar y compartir</small><span class="arrow">↗</span></button>
+          </div>
+        </div>
+        <div class="messages" id="messages" aria-live="polite"></div>
+      </section>
+      <footer class="composer-wrap">
+        <div class="composer">
+          <textarea id="messageInput" rows="1" placeholder="Preguntale algo a GAMEVERSE AI..." aria-label="Escribí tu mensaje"></textarea>
+          <div class="composer-tools">
+            <div class="composer-mode"><span class="tiny-spark">✳</span><span id="composerMode">General</span><span class="chevron">⌄</span></div>
+            <div class="composer-right"><span class="hint">Enter para enviar · Shift + Enter para nueva línea</span><button class="send-btn" id="sendBtn" aria-label="Enviar mensaje">↑</button></div>
+          </div>
+        </div>
+        <div class="disclaimer">GAMEVERSE AI puede cometer errores. Revisá la información importante.</div>
+      </footer>
+    </main>
+  </div>
+  <div class="toast" id="toast"></div>
+  <script src="/app.js"></script>
+</body>
+</html>
