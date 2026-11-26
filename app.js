@@ -10,14 +10,48 @@
   const viewNames = {chat:'Chat principal',builder:'Game Builder',code:'Code Studio',debugger:'Debugger',image:'Image Studio',projects:'Mis proyectos',library:'Biblioteca'};
   let currentMode = 'general';
   let currentView = 'chat';
-  let history = JSON.parse(localStorage.getItem('gv_history') || '[]');
+  let chats = JSON.parse(localStorage.getItem('gv_chats') || '[]');
+  let activeChatId = localStorage.getItem('gv_active_chat') || '';
   let conversation = JSON.parse(localStorage.getItem('gv_conversation') || '[]');
   let projects = JSON.parse(localStorage.getItem('gv_projects') || '[]');
+  if (conversation.length && !chats.length) {
+    chats.push({id:'legacy-'+Date.now(),title:'Conversación anterior',mode:'general',messages:conversation.slice(),updatedAt:Date.now()});
+    activeChatId = chats[0].id;
+  }
+  if (activeChatId && chats.length && !chats.some(chat=>chat.id===activeChatId)) activeChatId='';
   let toastTimer;
   function toast(text){const el=$('toast');el.textContent=text;el.classList.add('show');clearTimeout(toastTimer);toastTimer=setTimeout(()=>el.classList.remove('show'),2600)}
-  function saveState(){localStorage.setItem('gv_conversation',JSON.stringify(conversation.slice(-30)));localStorage.setItem('gv_projects',JSON.stringify(projects.slice(0,30)))}
-  function saveHistory(){localStorage.setItem('gv_history',JSON.stringify(history.slice(0,30)));renderHistory()}
-  function renderHistory(){const list=$('historyList');list.innerHTML='';history.slice(0,12).forEach(item=>{const b=document.createElement('button');b.className='history-entry';b.textContent=item.title;b.title=item.title;b.onclick=()=>{showView('chat');toast('Los mensajes de esta sesión se conservan en el chat actual.')};list.appendChild(b)})}
+  function saveState(){
+    localStorage.setItem('gv_conversation',JSON.stringify(conversation.slice(-40)));
+    localStorage.setItem('gv_projects',JSON.stringify(projects.slice(0,30)));
+    localStorage.setItem('gv_chats',JSON.stringify(chats.slice(0,40)));
+    if(activeChatId)localStorage.setItem('gv_active_chat',activeChatId);
+    else localStorage.removeItem('gv_active_chat');
+    const active=chats.find(chat=>chat.id===activeChatId);
+    if(active){active.messages=conversation.slice(-40);active.updatedAt=Date.now();active.mode=currentMode}
+    renderHistory();
+  }
+  function createChat(firstMessage){
+    const chat={id:'chat-'+Date.now()+'-'+Math.random().toString(36).slice(2,7),title:firstMessage.slice(0,48),mode:currentMode,messages:[],updatedAt:Date.now()};
+    chats.unshift(chat);activeChatId=chat.id;return chat;
+  }
+  function renderHistory(){
+    const list=$('historyList');list.innerHTML='';
+    chats.slice().sort((a,b)=>(b.updatedAt||0)-(a.updatedAt||0)).slice(0,15).forEach(chat=>{
+      const b=document.createElement('button');b.className='history-entry'+(chat.id===activeChatId?' selected':'');
+      b.textContent=chat.title||'Nuevo chat';b.title=chat.title||'Nuevo chat';
+      b.onclick=()=>loadChat(chat.id);list.appendChild(b);
+    });
+  }
+  function loadChat(id){
+    const chat=chats.find(item=>item.id===id);if(!chat)return;
+    activeChatId=id;conversation=chat.messages.slice();currentMode=chat.mode||'general';
+    messages.innerHTML='';conversation.forEach(item=>addMessage(item.role,item.content));
+    document.querySelectorAll('[data-mode]').forEach(btn=>btn.classList.toggle('selected',btn.dataset.mode===currentMode));
+    $('composerMode').textContent=modeNames[currentMode]||'General';
+    showView('chat');welcome.hidden=conversation.length>0;messages.hidden=conversation.length===0;
+    saveState();
+  }
   function saveProject(title,content){projects.unshift({title:String(title).slice(0,80),content:String(content).slice(0,12000),date:new Date().toLocaleDateString('es-AR')});projects=projects.slice(0,30);saveState();toast('Proyecto guardado en Mis proyectos')}
   function addMessage(role,text){
     const row=document.createElement('div');row.className='message '+role;
@@ -30,8 +64,11 @@
   function setStatus(text,online=false){$('statusText').textContent=text;$('statusDot').classList.toggle('online',online)}
   async function send(text){
     const value=(text??input.value).trim();if(!value)return;
-    showView('chat');welcome.hidden=true;addMessage('user',value);input.value='';input.style.height='auto';
-    history.unshift({title:value.slice(0,48),mode:currentMode});saveHistory();
+    showView('chat');
+    if(!activeChatId)createChat(value);
+    const active=chats.find(chat=>chat.id===activeChatId);
+    if(active&&!active.messages.length)active.title=value.slice(0,48);
+    welcome.hidden=true;messages.hidden=false;addMessage('user',value);input.value='';input.style.height='auto';
     conversation.push({role:'user',content:value});saveState();
     setStatus('Conectando con la IA…',true);$('sendBtn').disabled=true;
     try{
@@ -95,17 +132,27 @@
   document.querySelectorAll('[data-mode]').forEach(btn=>btn.addEventListener('click',()=>{currentMode=btn.dataset.mode;document.querySelectorAll('[data-mode]').forEach(x=>x.classList.toggle('selected',x===btn));$('composerMode').textContent=modeNames[currentMode];$('topMode').textContent=modeNames[currentMode]}));
   document.querySelectorAll('[data-view]').forEach(btn=>btn.addEventListener('click',()=>showView(btn.dataset.view)));
   document.querySelectorAll('[data-prompt]').forEach(btn=>btn.addEventListener('click',()=>send(btn.dataset.prompt)));
-  $('newChatBtn').addEventListener('click',()=>{messages.innerHTML='';welcome.hidden=false;conversation=[];saveState();showView('chat');input.value='';$('sidebar').classList.remove('open');input.focus()});
-  $('clearHistory').addEventListener('click',()=>{history=[];saveHistory();toast('Historial local borrado')});
+  $('newChatBtn').addEventListener('click',()=>{
+    saveState();activeChatId='';conversation=[];messages.innerHTML='';input.value='';
+    welcome.hidden=false;messages.hidden=false;saveState();showView('chat');
+    $('sidebar').classList.remove('open');input.focus();
+  });
+  $('clearHistory').addEventListener('click',()=>{
+    chats=[];activeChatId='';localStorage.removeItem('gv_chats');localStorage.removeItem('gv_active_chat');
+    saveState();renderHistory();toast('Historial de chats borrado');
+  });
   $('themeBtn').addEventListener('click',()=>{document.body.classList.toggle('light');localStorage.setItem('gv_theme',document.body.classList.contains('light')?'light':'dark')});
   if(localStorage.getItem('gv_theme')==='light')document.body.classList.add('light');
   $('mobileMenu').addEventListener('click',()=>$('sidebar').classList.toggle('open'));
   $('settingsBtn').addEventListener('click',()=>toast('IA gratuita conectada mediante Cloudflare Workers AI.'));
   document.addEventListener('keydown',e=>{if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==='k'){e.preventDefault();input.focus()}});
   const panel=document.createElement('section');panel.id='workspacePanel';panel.className='workspace-panel';panel.hidden=true;chatScroll.insertBefore(panel,messages);
+  const storedActive=chats.find(chat=>chat.id===activeChatId);
+  if(storedActive)conversation=storedActive.messages.slice();
   renderHistory();
   messages.hidden=conversation.length===0;
   if(conversation.length){welcome.hidden=true;conversation.forEach(m=>addMessage(m.role,m.content))}
+  saveState();
   setStatus('Interfaz lista · IA gratuita disponible');
   showView('chat');
 })();
