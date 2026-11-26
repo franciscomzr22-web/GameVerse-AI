@@ -22,13 +22,13 @@
   let toastTimer;
   function toast(text){const el=$('toast');el.textContent=text;el.classList.add('show');clearTimeout(toastTimer);toastTimer=setTimeout(()=>el.classList.remove('show'),2600)}
   function saveState(){
+    const active=chats.find(chat=>chat.id===activeChatId);
+    if(active){active.messages=conversation.slice(-40);active.updatedAt=Date.now();active.mode=currentMode}
     localStorage.setItem('gv_conversation',JSON.stringify(conversation.slice(-40)));
     localStorage.setItem('gv_projects',JSON.stringify(projects.slice(0,30)));
     localStorage.setItem('gv_chats',JSON.stringify(chats.slice(0,40)));
     if(activeChatId)localStorage.setItem('gv_active_chat',activeChatId);
     else localStorage.removeItem('gv_active_chat');
-    const active=chats.find(chat=>chat.id===activeChatId);
-    if(active){active.messages=conversation.slice(-40);active.updatedAt=Date.now();active.mode=currentMode}
     renderHistory();
   }
   function createChat(firstMessage){
