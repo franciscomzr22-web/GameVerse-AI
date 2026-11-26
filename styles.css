@@ -88,3 +88,26 @@
 #signOutBtn:hover{background:#26334b;color:#fff}
 
 .history-entry.selected{background:#202b45;color:#e5eaff;border-left:2px solid #9b8cff;padding-left:8px}
+
+/* GAMEVERSE AI - herramientas ampliadas y preferencias */
+.template-row{display:flex;flex-wrap:wrap;gap:8px}
+.template-chip{border:1px solid #35435e;background:#18243a;color:#cbd6ea;border-radius:9px;padding:9px 11px;font-size:10px}
+.template-chip:hover{border-color:#8c7cff;background:#242b49}
+.project-create{margin-bottom:16px}
+.project-create input,.project-create textarea{width:100%;border:1px solid #33425c;background:#0c1422;color:#edf3ff;border-radius:9px;padding:12px;font:12px 'DM Sans',sans-serif}
+.project-create textarea{resize:vertical}
+.setting-check{display:flex;align-items:center;gap:9px}
+.setting-check input{width:16px;height:16px;accent-color:#8b7cff}
+body[data-accent="blue"]{--accent:#4c9dff;--accent2:#38c5e8}
+body[data-accent="green"]{--accent:#31c48d;--accent2:#58d6b0}
+body[data-accent="pink"]{--accent:#ec78bd;--accent2:#a78bfa}
+body[data-accent="violet"]{--accent:#8b7cff;--accent2:#5c9dff}
+body[data-accent] .primary-action{background:linear-gradient(110deg,var(--accent),var(--accent2))}
+body[data-accent] .send-btn{background:linear-gradient(135deg,var(--accent),var(--accent2))}
+.compact-ui .sidebar{gap:11px;padding-top:17px}
+.compact-ui .nav-item{padding:7px 9px}
+.compact-ui .mode-item{padding:5px 8px}
+.compact-ui .chat-scroll{padding-top:22px}
+.light .template-chip{background:#f0f3fb;color:#34425c;border-color:#dce3ef}
+.light .project-create input,.light .project-create textarea{background:#f7f9fd;color:#172238;border-color:#dce3ef}
+@media(max-width:600px){.template-row{display:grid;grid-template-columns:repeat(2,minmax(0,1fr))}.template-chip{min-height:40px}}
