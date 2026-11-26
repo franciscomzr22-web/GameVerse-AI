@@ -138,7 +138,8 @@
     $('sidebar').classList.remove('open');input.focus();
   });
   $('clearHistory').addEventListener('click',()=>{
-    chats=[];activeChatId='';localStorage.removeItem('gv_chats');localStorage.removeItem('gv_active_chat');
+    chats=[];activeChatId='';conversation=[];messages.innerHTML='';welcome.hidden=false;
+    localStorage.removeItem('gv_chats');localStorage.removeItem('gv_active_chat');
     saveState();renderHistory();toast('Historial de chats borrado');
   });
   $('themeBtn').addEventListener('click',()=>{document.body.classList.toggle('light');localStorage.setItem('gv_theme',document.body.classList.contains('light')?'light':'dark')});
