@@ -162,7 +162,7 @@
   document.body.dataset.accent=localStorage.getItem('gv_accent')||'violet';
   if(localStorage.getItem('gv_compact')==='true')document.body.classList.add('compact-ui');
   $('mobileMenu').addEventListener('click',()=>$('sidebar').classList.toggle('open'));
-  $('settingsBtn').addEventListener('click',()=>toast('IA gratuita conectada mediante Cloudflare Workers AI.'));
+  $('settingsBtn').addEventListener('click',()=>showView('settings'));
   document.addEventListener('keydown',e=>{if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==='k'){e.preventDefault();input.focus()}});
   const panel=document.createElement('section');panel.id='workspacePanel';panel.className='workspace-panel';panel.hidden=true;chatScroll.insertBefore(panel,messages);
   const storedActive=chats.find(chat=>chat.id===activeChatId);
