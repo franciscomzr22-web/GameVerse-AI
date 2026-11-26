@@ -12,7 +12,40 @@
   <link rel="stylesheet" href="/GameVerse-AI/styles.css">
 </head>
 <body>
-  <div class="app-shell">
+  <section class="auth-screen" id="authScreen">
+    <div class="auth-visual">
+      <div class="auth-brand"><div class="brand-mark"><span>G</span><i></i></div><div><strong>GAMEVERSE<span> AI</span></strong><small>CREATIVE INTELLIGENCE</small></div></div>
+      <div class="auth-showcase">
+        <div class="auth-orbit"><span>✳</span></div>
+        <p class="auth-kicker">TU PRÓXIMA GRAN IDEA EMPIEZA AQUÍ</p>
+        <h1>Imaginá.<br><span>Creá. Jugá.</span></h1>
+        <p class="auth-copy">Un espacio para diseñar videojuegos, programar y convertir tus ideas en proyectos.</p>
+        <div class="auth-feature-row"><span>✦ Game Builder</span><span>⌘ Code Studio</span><span>◇ Roblox</span></div>
+      </div>
+      <div class="auth-footer-note">GAMEVERSE AI · CREATIVE WORKSPACE</div>
+    </div>
+    <div class="auth-form-side">
+      <div class="auth-card">
+        <div class="auth-mobile-brand">✳ GAMEVERSE AI</div>
+        <div class="auth-tabs"><button type="button" class="auth-tab active" id="loginTab">Iniciar sesión</button><button type="button" class="auth-tab" id="registerTab">Crear cuenta</button></div>
+        <h2 id="authTitle">Qué bueno verte de nuevo</h2>
+        <p class="auth-subtitle" id="authSubtitle">Ingresá a tu espacio creativo.</p>
+        <button type="button" class="google-auth" id="googleAuth"><span class="google-g">G</span> Continuar con Google</button>
+        <div class="auth-divider"><span>o con tu correo</span></div>
+        <form id="authForm">
+          <label for="authEmail">Correo electrónico</label>
+          <input id="authEmail" type="email" placeholder="tu@correo.com" autocomplete="email" required>
+          <label for="authPassword">Contraseña</label>
+          <input id="authPassword" type="password" placeholder="Al menos 6 caracteres" minlength="6" autocomplete="current-password" required>
+          <button type="button" class="forgot-link" id="forgotPassword">¿Olvidaste tu contraseña?</button>
+          <button type="submit" class="auth-submit" id="authSubmit">Iniciar sesión <span>→</span></button>
+        </form>
+        <p class="auth-feedback" id="authFeedback" role="status">Configurá Firebase para activar las cuentas.</p>
+        <p class="auth-legal">Al continuar, aceptás usar GAMEVERSE AI de forma responsable.</p>
+      </div>
+    </div>
+  </section>
+  <div class="app-shell" id="appShell" hidden>
     <aside class="sidebar" id="sidebar">
       <div class="brand">
         <div class="brand-mark"><span>G</span><i></i></div>
@@ -43,7 +76,8 @@
       <div class="history-list" id="historyList"></div>
       <div class="sidebar-bottom">
         <div class="user-avatar">F</div>
-        <div class="user-info"><b>Usuario</b><small>Plan de prueba</small></div>
+        <div class="user-info"><b id="accountName">Usuario</b><small id="accountEmail">Cuenta</small></div>
+        <button class="settings-btn" id="signOutBtn" title="Cerrar sesión">↪</button>
         <button class="settings-btn" id="settingsBtn" title="Estado de conexión">⚙</button>
       </div>
     </aside>
@@ -84,6 +118,10 @@
     </main>
   </div>
   <div class="toast" id="toast"></div>
+  <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js"></script>
+  <script src="/GameVerse-AI/firebase-config.js"></script>
+  <script src="/GameVerse-AI/auth.js"></script>
   <script src="/GameVerse-AI/app.js"></script>
 </body>
 </html>
