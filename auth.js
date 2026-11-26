@@ -29,10 +29,34 @@
   function showApp(user) {
     screen.hidden = true;
     app.hidden = false;
-    byId('accountName').textContent = user.displayName || (user.email || 'Creador').split('@')[0];
+
+    const displayName = user.displayName || (user.email || 'Creador').split('@')[0];
+    byId('accountName').textContent = displayName;
     byId('accountEmail').textContent = user.email || 'Sesión iniciada';
+
     const avatar = document.querySelector('.user-avatar');
-    if (avatar) avatar.textContent = (user.displayName || user.email || 'G').charAt(0).toUpperCase();
+    if (avatar) {
+      avatar.replaceChildren();
+      avatar.setAttribute('aria-label', 'Foto de perfil de ' + displayName);
+      if (user.photoURL) {
+        const photo = document.createElement('img');
+        photo.src = user.photoURL;
+        photo.alt = '';
+        photo.referrerPolicy = 'no-referrer';
+        photo.onerror = () => {
+          photo.remove();
+          avatar.textContent = displayName.charAt(0).toUpperCase();
+        };
+        avatar.appendChild(photo);
+      } else {
+        avatar.textContent = displayName.charAt(0).toUpperCase();
+      }
+    }
+    const signOut = byId('signOutBtn');
+    if (signOut) {
+      signOut.title = 'Cerrar sesión de ' + displayName;
+      signOut.setAttribute('aria-label', 'Cerrar sesión');
+    }
   }
   function showLogin() {
     app.hidden = true;
